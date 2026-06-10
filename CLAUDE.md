@@ -14,7 +14,7 @@
 
 - Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui
 - Supabase (PostgreSQL + Auth)
-- Claude API (Tool Calling), Vercel AI SDK
+- Gemini API (@ai-sdk/google, Function Calling), Vercel AI SDK
 - 분석 진행 상황은 SSE로 스트리밍
 
 ## 프로젝트 구조
