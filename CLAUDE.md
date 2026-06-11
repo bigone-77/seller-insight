@@ -24,6 +24,29 @@
 - lib/agent, lib/schemas, lib/supabase, lib/claude
 - 화면 규모를 고려해 FSD 대신 관심사 분리 수준의 구조 채택
 
+## 프론트엔드 구조
+
+화면 수가 적은 현 단계에 맞춘 경량 구조. 클래식한 폴더(components/{도메인}, hooks, lib)를 쓰되 역할을 명확히 분리한다.
+
+폴더 역할:
+
+- app/{route}/page.tsx — 서버 컴포넌트로 유지. export default function Page(). 'use client' 금지.
+  page는 위젯 컴포넌트들을 <div> 등으로 배치·조합하는 최소 return만 가진다. 비즈니스 로직 금지.
+- components/customer, components/admin — 도메인별 위젯/표현 컴포넌트.
+  - 상태를 공유해야 하는 위젯들은 클라이언트 Provider 컴포넌트로 감싸 context로 공유한다.
+    (page가 서버 컴포넌트라 위젯 간 상태를 props로 못 넘기므로, 클라이언트 경계는 Provider가 담당)
+  - 표현(프레젠테이션) 컴포넌트는 props 또는 context만 받아 렌더하는 순수 컴포넌트로, 파일 분리.
+- components/ui — shadcn.
+- hooks/ — 클라이언트 로직 훅 (use-\*.ts). useChat·transport·외부 연동·상태 관리 등.
+- lib/ — 공통 util.
+
+규칙:
+
+- page.tsx는 항상 export default function Page(), 서버 컴포넌트, 위젯 배치만.
+- 클라이언트 로직('use client', 훅, 브라우저 API)은 위젯/Provider/훅으로 빼고 page에 두지 않는다.
+- 한 파일에 여러 컴포넌트 우후죽순 금지. 역할 분명하면 별도 파일.
+- 파일명 kebab-case, 컴포넌트명 PascalCase.
+
 ## 데이터베이스 (테이블 4개 + auth.users)
 
 - conversations: 대화 세션. visitor_id로 익명 손님 식별
